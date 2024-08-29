@@ -1,0 +1,17 @@
+* text=auto eol=lf whitespace=tab-in-indent,blank-at-eol,tabwidth=4
+*.eot binary
+*.gif binary
+*.jpeg binary
+*.jpg binary
+Makefile text whitespace=-tab-in-indent,blank-at-eol,tabwidth=4
+*.mak text whitespace=-tab-in-indent,blank-at-eol,tabwidth=4
+*.pdf binary
+*.png binary
+*.svg binary
+*.tf text=auto eol=lf whitespace=tab-in-indent,blank-at-eol,tabwidth=2
+*.tgz binary
+*.ttf binary
+*.woff2 binary
+*.woff binary
+*.zip binary
+/yarn.lock -merge
