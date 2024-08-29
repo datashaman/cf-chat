@@ -1,0 +1,14 @@
+{
+  "name": "cf-chat",
+  "license": "MIT",
+  "scripts": {
+    "dev": "wrangler dev --live-reload",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "^4.5.9"
+  },
+  "devDependencies": {
+    "wrangler": "^3.57.2"
+  }
+}
