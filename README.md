@@ -15,6 +15,11 @@ cp .example.env .env
 yarn dev
 ```
 
+### Test
+```
+yarn test
+```
+
 ## Deploy
 ```
 yarn deploy
