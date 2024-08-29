@@ -3,6 +3,15 @@ name: Build
 on:
   pull_request:
     branches: [ "main" ]
+    paths:
+      - '.github/workflows/build.yml'
+      - 'Makefile'
+      - 'package.json'
+      - 'src/**'
+      - 'test/**'
+      - 'vitest.config.js'
+      - 'wrangler.toml'
+      - 'yarn.lock'
 
 jobs:
   build:
