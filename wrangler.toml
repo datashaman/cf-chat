@@ -42,6 +42,10 @@ OPENAI_MODEL = "gpt-4o-mini"
 # binding = "MY_DB"
 # database_name = "my-database"
 # database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+[[d1_databases]]
+binding = "DB"
+database_name = "cf-chat"
+database_id = "0e1e5eda-46c5-41cc-a231-0963958e65b5"
 
 # Bind a dispatch namespace. Use Workers for Platforms to deploy serverless functions programmatically on behalf of your customers.
 # Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#dispatch-namespace-bindings-workers-for-platforms

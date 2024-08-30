@@ -55,14 +55,23 @@ export const deleteAssistant = async (env) => {
   });
 };
 
-export const createThread = async (env, messages = []) => {
-  return openai(env, `assistants/${assistantId}/threads`, {
+export const createThread = async (env, title = 'New Thread', messages = []) => {
+  return openai(env, `threads`, {
     method: 'POST',
     body: JSON.stringify({
       messages,
+      metadata: {
+        title,
+      },
     }),
   });
 };
+
+export const getThread = async (env, threadId) => {
+  return openai(env, `threads/${threadId}`, {
+    method: 'GET',
+  });
+}
 
 export const deleteThread = async (env, threadId) => {
   return openai(env, `threads/${threadId}`, {
@@ -99,13 +108,14 @@ export const runThread = async (env, threadId, additional_instructions = null, a
 };
 
 export default {
-  listAssistants,
   createAssistant,
-  createOrUpdateAssistant,
-  deleteAssistant,
-  createThread,
-  deleteThread,
-  listMessages,
   createMessage,
+  createOrUpdateAssistant,
+  createThread,
+  deleteAssistant,
+  deleteThread,
+  getThread,
+  listAssistants,
+  listMessages,
   runThread,
 };

@@ -2,55 +2,61 @@
 /** @jsxImportSource hono/jsx */
 
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 
-import openai from './openai';
+import database from './database'
+import openai from './openai'
 
-const app = new Hono();
+const app = new Hono()
+
+app.use('/*', cors())
 
 app.get('/threads', async (c) => {
-  return c.json({ threads: ['thread1', 'thread2'] });
-});
+  const dbThreads =  await database.listThreads(c.env)
+  const threads = await Promise.all(
+    dbThreads
+      .map((id) => openai.getThread(c.env, id))
+  )
+  return c.json({ threads })
+})
 
 app.post('/threads', async (c) => {
-  const thread = await openai.createThread(c.env);
-
-  return c.json({ thread });
-});
+  const thread = await openai.createThread(c.env)
+  await database.createThread(c.env, thread.id)
+  return c.json({ thread })
+})
 
 app.get('/threads/:id', async (c) => {
-  const thread = await openai.getThread(c.env, req.params.id);
-
-  return c.json({ thread });
-});
+  const thread = await openai.getThread(c.env, c.req.param('id'))
+  return c.json({ thread })
+})
 
 app.put('/threads/:id', async (c) => {
-  const thread = await openai.updateThread(c.env, req.params.id);
-
-  return c.json({ thread });
-});
+  const thread = await openai.updateThread(c.env, c.req.param('id'))
+  return c.json({ thread })
+})
 
 app.delete('/threads/:id', async (c) => {
-  const thread = await openai.deleteThread(c.env, req.params.id);
-
-  return c.json({ thread });
-});
+  const thread = await openai.deleteThread(c.env, c.req.param('id'))
+  await database.deleteThread(c.env, c.req.param('id'))
+  return c.json({ thread })
+})
 
 app.get('/threads/:id/messages', async (c) => {
-  const messages = await openai.listMessages(c.env, req.params.id);
-
-  return c.json({ messages });
-});
+  const messages = await openai.listMessages(c.env, c.req.param('id'))
+  return c.json({ messages })
+})
 
 app.post('/threads/:id/messages', async (c) => {
-  const body = await c.req.parseBody();
-  const message = await openai.createMessage(c.env, req.params.id, body);
-
-  return c.json({ message });
-});
+  const body = await c.req.parseBody()
+  const message = await openai.createMessage(c.env, c.req.param('id'), body)
+  return c.json({ message })
+})
 
 export default {
   async fetch(request, env, ctx) {
-    // const assistant = await createOrUpdateAssistant(env);
-    return app.fetch(request, env, ctx);
+    // const assistant = await createOrUpdateAssistant(env)
+    // console.log('updated or created assistant', assistant.id)
+    return app.fetch(request, env, ctx)
   },
-};
+}

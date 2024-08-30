@@ -3,23 +3,31 @@
 
 import { useState } from 'hono/jsx'
 
-export const App = () => {
-  const [threads, setThreads] = useState({
-    1: {
-      title: 'Thread 1',
-      messages: [
-        {
-          role: 'user',
-          content: 'Hello!',
-        },
-        {
-          role: 'bot',
-          content: 'Hi!',
-        },
-      ],
+const API_URL = import.meta.env.VITE_API_URL
+
+const listThreads = async () => {
+  const response = await fetch(`${API_URL}/threads`)
+  const data = await response.json()
+  return data.threads
+}
+
+const createThread = async () => {
+  const response = await fetch(`${API_URL}/threads`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify({
+      title: 'New Thread',
+    }),
   })
-  const [currentThread, setCurrentThread] = useState(1)
+  const data = await response.json()
+  return data.thread
+}
+
+export const App = async () => {
+  const [threads, setThreads] = useState(await listThreads())
+  const [currentThread, setCurrentThread] = useState(null)
   const [message, setMessage] = useState('')
 
   const sendMessage = (e) => {
@@ -67,7 +75,7 @@ export const App = () => {
 
       <div class="flex flex-col flex-grow">
         <div class="flex-grow p-6 overflow-y-auto">
-          {threads[currentThread].messages.map((msg, index) => (
+          {currentThread ? threads[currentThread].messages.map((msg, index) => (
             msg.role === 'user' ? (
               <div class="chat chat-end">
                 <div class="chat-bubble chat-bubble-success">{msg.content}</div>
@@ -77,7 +85,7 @@ export const App = () => {
                 <div class="chat-bubble chat-bubble-info">{msg.content}</div>
               </div>
             )
-          ))}
+          )) : 'Select a thread to start chatting'}
         </div>
 
         <form onSubmit={sendMessage}>

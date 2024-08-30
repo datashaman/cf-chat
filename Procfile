@@ -1,2 +1,2 @@
-vite: yarn dev:vite
-wrangler: yarn dev:wrangler
+vite: make vite
+wrangler: make wrangler
