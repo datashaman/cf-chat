@@ -11,3 +11,9 @@ wrangler:
 
 schema-local:
 	wrangler d1 execute $(DB_DATABASE) --local --file=./database/schema.sql
+
+schema-remote:
+	wrangler d1 execute $(DB_DATABASE) --remote --file=./database/schema.sql
+
+deploy:
+	wrangler deploy

@@ -59,4 +59,9 @@ export default {
     // console.log('updated or created assistant', assistant.id)
     return app.fetch(request, env, ctx)
   },
+  async queue(batch, env, ctx) {
+    for (const message of batch.messages) {
+      console.log('received message', message)
+    }
+  }
 }
