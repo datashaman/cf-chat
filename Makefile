@@ -17,3 +17,6 @@ schema-remote:
 
 deploy:
 	wrangler deploy
+
+tail:
+	wrangler tail
