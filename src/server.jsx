@@ -21,7 +21,8 @@ app.get('/threads', async (c) => {
 })
 
 app.post('/threads', async (c) => {
-  const thread = await openai.createThread(c.env)
+  const body = await c.req.parseBody()
+  const thread = await openai.createThread(c.env, body)
   await database.createThread(c.env, thread.id)
   return c.json({ thread })
 })
@@ -32,7 +33,8 @@ app.get('/threads/:id', async (c) => {
 })
 
 app.put('/threads/:id', async (c) => {
-  const thread = await openai.updateThread(c.env, c.req.param('id'))
+  const body = await c.req.parseBody()
+  const thread = await openai.updateThread(c.env, c.req.param('id'), body)
   return c.json({ thread })
 })
 
@@ -43,7 +45,8 @@ app.delete('/threads/:id', async (c) => {
 })
 
 app.get('/threads/:id/messages', async (c) => {
-  const messages = await openai.listMessages(c.env, c.req.param('id'))
+  const body = await c.req.parseBody()
+  const messages = await openai.listMessages(c.env, c.req.param('id'), body)
   return c.json({ messages })
 })
 
