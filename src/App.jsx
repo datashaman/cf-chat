@@ -64,7 +64,7 @@ export const App = async () => {
           </li>
         </ul>
         <ul class="menu rounded-box">
-          <li class="menu-title">Threads</li>
+          <li class="menu-title">Threads <button onClick={createThread}>+</button></li>
           {Object.entries(threads).map(([id, thread]) => (
             <li class="menu-item">
               <a href="#" class={id == currentThread ? 'active' : ''} onClick={() => setCurrentThread(id)}>{thread.title}</a>
