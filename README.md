@@ -1,5 +1,7 @@
 # cf-chat
 
+A simple chat app using Cloudflare Workers and WebSockets.
+
 ## Install
 ```
 yarn
