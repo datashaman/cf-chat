@@ -57,11 +57,11 @@ export const deleteAssistant = async (env) => {
   })
 }
 
-export const createThread = async (env, title = 'New Thread', messages = []) => {
+export const createThread = async (env, title = 'New Thread', body = {}) => {
   return openai(env, `threads`, {
     method: 'POST',
     body: JSON.stringify({
-      messages,
+      ...body,
       metadata: {
         title,
       },
@@ -88,13 +88,10 @@ export const listMessages = async (env, threadId, body = {}) => {
   })
 }
 
-export const createMessage = async (env, threadId, content, role = 'user') => {
+export const createMessage = async (env, threadId, body) => {
   return openai(env, `threads/${threadId}/messages`, {
     method: 'POST',
-    body: JSON.stringify({
-      role,
-      content,
-    }),
+    body: JSON.stringify(body),
   })
 }
 
