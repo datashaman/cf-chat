@@ -383,10 +383,10 @@
   resolved "https://registry.yarnpkg.com/@hono/node-server/-/node-server-1.12.2.tgz#383d92e02f8fd75348b8246385de6c45f04b28d1"
   integrity sha512-xjzhqhSWUE/OhN0g3KCNVzNsQMlFUAL+/8GgPUr3TKcU7cvgZVBGswFofJ8WwGEHTqobzze1lDpGJl9ZNckDhA==
 
-"@hono/vite-cloudflare-pages@^0.2.3":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@hono/vite-cloudflare-pages/-/vite-cloudflare-pages-0.2.5.tgz#a231c7a41a114ee65a98d8757941693b824c7140"
-  integrity sha512-/Cw4bREPf2OelHDc/2oVXYXemyKz+wXkC+5uK8ZLo8c2JV7vthSchQPWK7O6BGe7al0z5qKVqhTYkfZvuW0T5w==
+"@hono/vite-cloudflare-pages@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@hono/vite-cloudflare-pages/-/vite-cloudflare-pages-0.4.2.tgz#35ba186ba1a9a0b9599f5ef9ab0a18f1fe0c761c"
+  integrity sha512-fvSmWNtL7rMTa6tfj0dJNu0UStp8veb2r1BfutoKtJ6GaTzO1sR5ElQw9jIYo46oTBcx8+i/9+NzyGR56awtrQ==
 
 "@hono/vite-dev-server@^0.14.0":
   version "0.14.0"
