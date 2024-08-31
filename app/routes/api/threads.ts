@@ -1,6 +1,3 @@
-/** @jsxRuntime automatic */
-/** @jsxImportSource hono/jsx */
-
 import type { Context } from 'hono'
 
 import { Hono } from 'hono'
