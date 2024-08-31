@@ -1,36 +1,75 @@
-# cf-chat
+# Nuxt 3 Minimal Starter
 
-A simple chat app using Cloudflare Workers and WebSockets.
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## Install
+## Setup
+
+Make sure to install the dependencies:
+
+```bash
+# npm
+npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
+
+# bun
+bun install
 ```
-yarn
-```
 
-## Configure
-```
-cp .example.env .env
-```
+## Development Server
 
-You will need a token to deploy to Cloudflare Workers. To create a token:
+Start the development server on `http://localhost:3000`:
 
-1. From the [Cloudflare dashboard](https://dash.cloudflare.com/profile/api-tokens/), go to **My Profile > API Tokens**.
-2. Select **Create Token**.
-3. Select the **Edit Cloudflare Workers** template, select **Account** and **Zone**, and click **Continue to Summary**.
-4. Read the token summary and click **Create Token**.
-5. Copy the token and paste into `.env` as `CLOUDFLARE_API_TOKEN`.
+```bash
+# npm
+npm run dev
 
-## Develop
-```
+# pnpm
+pnpm run dev
+
+# yarn
 yarn dev
+
+# bun
+bun run dev
 ```
 
-### Test
-```
-yarn test
+## Production
+
+Build the application for production:
+
+```bash
+# npm
+npm run build
+
+# pnpm
+pnpm run build
+
+# yarn
+yarn build
+
+# bun
+bun run build
 ```
 
-## Deploy
+Locally preview production build:
+
+```bash
+# npm
+npm run preview
+
+# pnpm
+pnpm run preview
+
+# yarn
+yarn preview
+
+# bun
+bun run preview
 ```
-yarn deploy
-```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

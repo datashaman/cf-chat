@@ -1,6 +1,4 @@
 .DS_Store
-/.dev.vars
-/.env.local
+/.nuxt/
 /.wrangler/
-/dist/
 /node_modules/
