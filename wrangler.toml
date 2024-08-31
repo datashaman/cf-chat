@@ -1,7 +1,7 @@
 name = "cf-chat"
-main = "src/server.jsx"
-compatibility_date = "2024-04-01"
+compatibility_date = "2024-08-31"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
 
 [vars]
 OPENAI_ASSISTANT_NAME = "CF Chat"
@@ -21,7 +21,7 @@ id = "0f6ee1ca5be2449fa237b0d07008e981"
 queue = "openai-runs"
 binding = "RUNS"
 
-[[queues.consumers]]
-queue = "openai-runs"
-max_batch_size = 1
-max_batch_timeout = 2
+# [[queues.consumers]]
+#  queue = "openai-runs"
+# max_batch_size = 1
+# max_batch_timeout = 2

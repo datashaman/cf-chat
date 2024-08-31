@@ -16,7 +16,7 @@ schema-remote:
 	wrangler d1 execute $(DB_DATABASE) --remote --file=./database/schema.sql
 
 deploy:
-	wrangler deploy
+	yarn deploy
 
 tail:
 	wrangler tail
