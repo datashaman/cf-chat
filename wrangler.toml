@@ -1,0 +1,27 @@
+name = "cf-chat"
+main = "src/server.jsx"
+compatibility_date = "2024-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+OPENAI_ASSISTANT_NAME = "CF Chat"
+OPENAI_ASSISTANT_TEMPERATURE = 0.3
+OPENAI_MODEL = "gpt-4o-mini"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cf-chat"
+database_id = "0e1e5eda-46c5-41cc-a231-0963958e65b5"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "0f6ee1ca5be2449fa237b0d07008e981"
+
+[[queues.producers]]
+queue = "openai-runs"
+binding = "RUNS"
+
+[[queues.consumers]]
+queue = "openai-runs"
+max_batch_size = 1
+max_batch_timeout = 2
