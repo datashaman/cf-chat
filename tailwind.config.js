@@ -1,8 +1,8 @@
 // tailwind.config.js
 export default {
-  content: ['./app/**/*.tsx'],
+  content: ["./app/**/*.tsx"],
   theme: {
-    extend: {}
+    extend: {},
   },
-  plugins: []
-}
+  plugins: [],
+};
