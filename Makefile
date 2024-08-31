@@ -17,3 +17,6 @@ deploy:
 
 tail:
 	wrangler tail
+
+prettier:
+	prettier . --write

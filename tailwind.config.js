@@ -1,8 +1,17 @@
 // tailwind.config.js
+import daisyui from "daisyui"
+
 export default {
-  content: ["./app/**/*.tsx"],
+  content: [
+    "./components/**/*.{js,vue,ts}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./plugins/**/*.{js,ts}",
+    "./app.vue",
+    "./error.vue",
+  ],
   theme: {
     extend: {},
   },
-  plugins: [],
-};
+  plugins: [daisyui],
+}

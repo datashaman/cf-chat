@@ -1,4 +1,4 @@
-import { defineWorkersProject } from "@cloudflare/vitest-pool-workers/config";
+import { defineWorkersProject } from "@cloudflare/vitest-pool-workers/config"
 
 export default defineWorkersProject({
   test: {
@@ -16,4 +16,4 @@ export default defineWorkersProject({
       },
     },
   },
-});
+})
