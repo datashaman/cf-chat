@@ -3,8 +3,8 @@ import type { Context } from 'hono'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
-import database from '../../database'
-import openai from '../../openai'
+import database from '@/database'
+import openai from '@/openai'
 
 const getThread = async (c: Context, id: string) => {
   const thread = await openai.getThread(c, id)
