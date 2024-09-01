@@ -5,5 +5,7 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id")
   const body = await readBody(event)
 
-  return openai.createMessage(id, body)
+  return {
+    message: await openai.createMessage(id, body),
+  }
 })

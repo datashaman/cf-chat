@@ -1,68 +1,57 @@
+import OpenAI from "openai"
+
 export const useOpenAI = (context) => {
   const env = context.cloudflare.env
 
-  const openai = async (path: string, options: object = {}) => {
-    return $fetch(`${env.OPENAI_ENDPOINT}/${path}`, {
-      headers: {
-        Authorization: `Bearer ${env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-        "OpenAI-Beta": "assistants=v2",
-      },
-      ...options,
-    })
-  }
+  const client = new OpenAI({
+    apiKey: env.OPENAI_API_KEY,
+  })
 
-  const assistantBody = () => {
+  const assistantParams = (params = {}) => {
     return {
       model: env.OPENAI_MODEL,
       name: env.OPENAI_ASSISTANT_NAME,
       instructions:
         "You are a helpful AI assistant. You can provide information, answer questions, and help users get things done.",
       temperature: env.OPENAI_ASSISTANT_TEMPERATURE,
+      ...params,
     }
   }
 
   const listAssistants = async () => {
-    return openai("assistants")
+    return client.beta.assistants.list()
+  }
+
+  const findAssistant = async (name = env.OPENAI_ASSISTANT_NAME) => {
+    const assistants = await listAssistants()
+    return assistants.data.find((assistant) => assistant.name === name)
+  }
+
+  const createAssistant = async (params) => {
+    return client.beta.assistants.create(params)
+  }
+
+  const updateAssistant = async (assistantId, params) => {
+    return client.beta.assistants.update(assistantId, params)
   }
 
   return {
     listAssistants,
-    createAssistant: async () => {
-      const body = assistantBody()
-      console.log("Creating assistant with body:", body)
-      return openai("assistants", {
-        method: "POST",
-        body: JSON.stringify(body),
-      })
-    },
-    createOrModifyAssistant: async () => {
-      const assistants = await listAssistants()
-      const assistant = assistants.data.find(
-        (assistant) => assistant.name === c.env.OPENAI_ASSISTANT_NAME,
-      )
-      const path = assistant ? `assistants/${assistant.id}` : "assistants"
+    findAssistant,
+    createAssistant,
+    createOrUpdateAssistant: async (params = {}) => {
+      const assistant = await findAssistant()
+      params = assistantParams(params)
 
-      return openai(path, {
-        method: "POST",
-        body: JSON.stringify(assistantBody(c)),
-      })
+      return assistant
+        ? updateAssistant(assistant.id, params)
+        : createAssistant(params)
     },
-    deleteAssistant: async () => {
-      const assistants = await listAssistants()
-      const assistant = assistants.data.find(
-        (assistant) => assistant.name === c.env.OPENAI_ASSISTANT_NAME,
-      )
-
-      return openai(`assistants/${assistant.id}`, {
-        method: "DELETE",
-      })
+    deleteAssistant: async (assistantId) => {
+      return client.beta.assistants.delete(assistantId)
     },
-    createThread: async (body = {}) => {
-      return openai("threads", {
-        method: "POST",
-        body: JSON.stringify(body),
-      })
+    createThread: async (params = {}) => {
+      return client.beta.threads.create(params)
     },
     getThread: async (threadId) => {
       const cache_key = `thread-${threadId}`
@@ -71,7 +60,7 @@ export const useOpenAI = (context) => {
       if (!thread) {
         thread = JSON.stringify({
           created_at: new Date() / 1000,
-          value: await openai(`threads/${threadId}`),
+          value: await client.beta.threads.retrieve(threadId),
         })
 
         await env.CACHE.put(`thread-${threadId}`, thread)
@@ -80,24 +69,14 @@ export const useOpenAI = (context) => {
       return JSON.parse(thread).value
     },
     deleteThread: async (threadId) => {
-      return openai(`threads/${threadId}`, {
-        method: "DELETE",
-      })
+      return client.beta.threads.delete(threadId)
     },
-    listMessages: async (threadId, params = {}) => {
+    listMessages: async (threadId, query = { order: "asc" }) => {
       let response = null
-      let queryString = ""
-
       const messages = []
 
       do {
-        queryString = params
-          ? "?" +
-            Object.entries(params)
-              .map(([key, value]) => `${key}=${value}`)
-              .join("&")
-          : ""
-        response = await openai(`threads/${threadId}/messages${queryString}`)
+        response = await client.beta.threads.messages.list(threadId, query)
         messages.push(...response.data)
       } while (response.has_more)
 
@@ -110,26 +89,14 @@ export const useOpenAI = (context) => {
         }
       })
     },
-    createMessage: async (threadId, body) => {
-      return openai(`threads/${threadId}/messages`, {
-        method: "POST",
-        body: JSON.stringify(body),
-      })
+    createMessage: async (threadId, params) => {
+      return client.beta.threads.messages.create(threadId, params)
     },
     deleteMessage: async (threadId, messageId) => {
-      return openai(`threads/${threadId}/messages/${messageId}`, {
-        method: "DELETE",
-      })
+      return client.beta.threads.messages.delete(threadId, messageId)
     },
-    runThread: async (threadId, body = {}) => {
-      return openai(`threads/${threadId}/runs`, {
-        method: "POST",
-        body: JSON.stringify({
-          assistant_id: env.OPENAI_ASSISTANT_ID,
-          temperature: env.OPENAI_TEMPERATURE,
-          ...body,
-        }),
-      })
+    runThread: async (threadId, params) => {
+      return client.beta.threads.runs.stream(threadId, params)
     },
   }
 }

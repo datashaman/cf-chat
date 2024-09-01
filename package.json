@@ -27,6 +27,7 @@
     "husky": "^9.1.5",
     "lint-staged": "^15.2.9",
     "nitro-cloudflare-dev": "^0.1.6",
+    "openai": "^4.57.0",
     "postcss": "^8.4.41",
     "prettier": "3.3.3",
     "stylelint": "^16.9.0",
