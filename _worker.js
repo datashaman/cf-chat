@@ -48,6 +48,8 @@ const handleRun = async (request, env, context, threadId) => {
 
 export default {
   async fetch(request, env, context) {
+    console.log("Handling request", request.url)
+
     const threadId = getThreadId(request)
 
     if (threadId) {
