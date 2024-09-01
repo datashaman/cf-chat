@@ -3,7 +3,7 @@ import { useOpenAI } from "@/composables/useOpenAI"
 
 export default defineEventHandler(async ({ context }) => {
   const database = useDatabase(context)
-  const openai = useOpenAI(context.env)
+  const openai = useOpenAI(context.cloudflare.env)
 
   const dbThreads = await database.listThreads()
   const threads = await Promise.all(

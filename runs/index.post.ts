@@ -1,7 +1,7 @@
 import { useOpenAI } from "@/composables/useOpenAI"
 
 export default defineEventHandler(async (event) => {
-  const openai = useOpenAI(event.context.env)
+  const openai = useOpenAI(event.context.cloudflare.env)
   const id = getRouterParam(event, "id")
   const assistant = await openai.findAssistant()
   const params = await readBody(event)
