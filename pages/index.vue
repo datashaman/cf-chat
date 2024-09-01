@@ -28,14 +28,49 @@ const sendMessage = async () => {
     await setCurrentThread(threads.value[0].id)
   }
 
+  const userMessage = { role: "user", content: message.value }
+  const responseMessage = ref("")
+
+  messages.value[currentThread.value].push({
+    ...userMessage,
+    id: messages.value[currentThread.value].length + 1,
+  })
+
+  message.value = ""
+
+  messages.value[currentThread.value].push({
+    role: "assistant",
+    content: responseMessage,
+    id: messages.value[currentThread.value].length + 1,
+  })
+
   const response = await $fetch(`/api/threads/${currentThread.value}/runs`, {
     method: "POST",
     body: JSON.stringify({
-      additional_messages: [{ role: "user", content: message.value }],
+      additional_messages: [userMessage],
     }),
+    responseType: "stream",
   })
 
-  // messages.value[currentThread.value].push(data)
+  const reader = response.pipeThrough(new TextDecoderStream()).getReader()
+
+  while (true) {
+    const { value, done } = await reader.read()
+
+    if (done) {
+      break
+    }
+
+    value
+      .trim()
+      .split("\n")
+      .forEach((line) => {
+        if (line) {
+          console.log(line)
+          responseMessage.value += JSON.parse(line).content[0].text.value
+        }
+      })
+  }
 }
 
 const currentMessages = computed(() => {
@@ -92,11 +127,13 @@ onMounted(async () => {
           <template v-for="message in currentMessages" :key="message.id">
             <div v-if="message.role === 'user'" class="chat chat-end">
               <div class="chat-bubble chat-bubble-success">
-                {{ msg.content }}
+                {{ message.content }}
               </div>
             </div>
             <div v-else class="chat chat-start">
-              <div class="chat-bubble chat-bubble-info">{{ msg.content }}</div>
+              <div class="chat-bubble chat-bubble-info">
+                {{ message.content }}
+              </div>
             </div>
           </template>
         </template>

@@ -4,5 +4,7 @@ export default defineEventHandler(async (event) => {
   const openai = useOpenAI(event.context)
   const id = getRouterParam(event, "id")
 
-  return openai.listMessages(id)
+  return {
+    messages: await openai.listMessages(id),
+  }
 })

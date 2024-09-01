@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const thread = await openai.createThread(body)
   await database.createThread(thread.id)
+
   return {
     thread,
   }

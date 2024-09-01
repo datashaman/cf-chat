@@ -4,5 +4,7 @@ export default defineEventHandler(async (event) => {
   const openai = useOpenAI(event.context)
   const id = getRouterParam(event, "id")
 
-  return openai.deleteThread(id)
+  return {
+    thread: await openai.deleteThread(id),
+  }
 })
