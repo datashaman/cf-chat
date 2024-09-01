@@ -16,7 +16,7 @@ deploy:
 	wrangler deploy
 
 tail:
-	wrangler tail
+	wrangler pages deployment tail
 
 prettier:
 	prettier . --write

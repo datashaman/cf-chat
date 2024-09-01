@@ -29,7 +29,7 @@ const sendMessage = async () => {
   }
 
   const userMessage = { role: "user", content: message.value }
-  const responseMessage = ref("")
+  const responseMessage = ref("...")
 
   messages.value[currentThread.value].push({
     ...userMessage,
@@ -66,7 +66,10 @@ const sendMessage = async () => {
       .split("\n")
       .forEach((line) => {
         if (line) {
-          console.log(line)
+          if (responseMessage.value === "...") {
+            responseMessage.value = ""
+          }
+
           responseMessage.value += JSON.parse(line).content[0].text.value
         }
       })
@@ -85,7 +88,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex h-screen bg-base-100">
-    <div class="w-64 border-r">
+    <div class="w-64 flex-none border-r">
       <ul class="menu">
         <li class="menu-item">
           <a href="#">Welcome</a>
@@ -132,7 +135,12 @@ onMounted(async () => {
             </div>
             <div v-else class="chat chat-start">
               <div class="chat-bubble chat-bubble-info">
-                {{ message.content }}
+                <template v-if="message.content === '...'">
+                  <span class="loading loading-dots loading-xs"></span>
+                </template>
+                <template v-else>
+                  {{ message.content }}
+                </template>
               </div>
             </div>
           </template>
