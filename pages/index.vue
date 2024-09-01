@@ -23,19 +23,19 @@ const setCurrentThread = async (id) => {
 const sendMessage = async () => {
   if (!message.value) return
 
-  const { messages: data } = await $fetch(
-    `/api/threads/${currentThread.value}/runs`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        additional_messages: [{ role: "user", content: message.value }],
-      }),
-    },
-  )
+  if (!currentThread.value) {
+    await createThread()
+    await setCurrentThread(threads.value[0].id)
+  }
 
-  messages.value[currentThread.value] =
-    messages.value[currentThread.value] || []
-  messages.value[currentThread.value].push(data)
+  const response = await $fetch(`/api/threads/${currentThread.value}/runs`, {
+    method: "POST",
+    body: JSON.stringify({
+      additional_messages: [{ role: "user", content: message.value }],
+    }),
+  })
+
+  // messages.value[currentThread.value].push(data)
 }
 
 const currentMessages = computed(() => {
