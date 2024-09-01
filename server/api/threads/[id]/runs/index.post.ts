@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
         })
         .catch((err) => {
           // Handle any errors and close the stream
+          console.error(err)
           controller.error(err)
         })
     },
