@@ -2,6 +2,7 @@
 /.dev.vars
 /.env
 /.nuxt/
+/.output/
 /.wrangler/
 /.yarn/
 /node_modules/
