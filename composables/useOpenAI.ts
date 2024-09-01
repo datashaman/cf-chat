@@ -1,8 +1,6 @@
 import OpenAI from "openai"
 
-export const useOpenAI = (context) => {
-  const env = context.cloudflare.env
-
+export const useOpenAI = (env) => {
   const client = new OpenAI({
     apiKey: env.OPENAI_API_KEY,
   })

@@ -7,11 +7,11 @@ const getThreadId = (request) => {
   return match ? match[1] : null
 }
 
-const handleRun = async (request, env, context, threadId) => {
-  const openai = useOpenAI(context)
+const handleRun = async (request, env, threadId) => {
+  const openai = useOpenAI(env)
 
   const assistant = await openai.findAssistant()
-  const params = await request.body.read()
+  const params = await request.body.getReader().read()
 
   // Create a new web-compatible ReadableStream
   const stream = new ReadableStream({
@@ -47,16 +47,18 @@ const handleRun = async (request, env, context, threadId) => {
 }
 
 export default {
-  async fetch(request, env, context) {
-    console.log("Handling request", request.url)
+  async fetch(request, env) {
+    console.log("Handling request", request.url, env)
 
-    const threadId = getThreadId(request)
+    if (request.method === "POST") {
+      const threadId = getThreadId(request)
+      if (threadId) {
+        console.log("Handling run request")
 
-    if (threadId) {
-      console.log("Handling run request")
-
-      return handleRun(request, env, context, threadId)
+        return handleRun(request, env, threadId)
+      }
     }
+
     // Otherwise, serve the static assets.
     // Without this, the Worker will error and no assets will be served.
     return env.ASSETS.fetch(request)
