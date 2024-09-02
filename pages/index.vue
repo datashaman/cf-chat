@@ -1,5 +1,14 @@
 <script setup>
 import { ref, onMounted, computed } from "vue"
+import { marked } from "marked"
+import markedLinkifyIt from "marked-linkify-it"
+import DOMPurify from "dompurify"
+
+marked
+  .use({
+    breaks: true,
+  })
+  .use(markedLinkifyIt())
 
 const threads = ref([])
 const messages = ref({})
@@ -95,6 +104,11 @@ const supportsRequestStreams = () => {
   return duplexAccessed && !hasContentType
 }
 
+const renderMarkdown = (content) => {
+  const html = marked.parseInline(content)
+  return DOMPurify.sanitize(html)
+}
+
 onMounted(async () => {
   console.log("supportsRequestStreams", supportsRequestStreams())
   const { threads: data } = await $fetch("/api/threads")
@@ -145,18 +159,17 @@ onMounted(async () => {
         <template v-if="currentThread">
           <template v-for="message in currentMessages" :key="message.id">
             <div v-if="message.role === 'user'" class="chat chat-end">
-              <div class="chat-bubble chat-bubble-success">
-                {{ message.content }}
-              </div>
+              <div
+                class="chat-bubble chat-bubble-success"
+                v-html="renderMarkdown(message.content)"
+              />
             </div>
             <div v-else class="chat chat-start">
               <div class="chat-bubble chat-bubble-info">
                 <template v-if="message.content === '...'">
                   <span class="loading loading-dots loading-xs"></span>
                 </template>
-                <template v-else>
-                  {{ message.content }}
-                </template>
+                <div v-else v-html="renderMarkdown(message.content)" />
               </div>
             </div>
           </template>
