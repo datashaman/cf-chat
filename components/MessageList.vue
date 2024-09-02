@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
 import { marked } from "marked"
 import markedLinkifyIt from "marked-linkify-it"
 import DOMPurify from "dompurify"

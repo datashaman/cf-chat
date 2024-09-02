@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from "vue"
+import { ref } from "vue"
 
 const props = defineProps({
   currentThread: String,
