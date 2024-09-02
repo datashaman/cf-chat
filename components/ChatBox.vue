@@ -69,13 +69,12 @@ const sendMessage = async () => {
 
   <form @submit.prevent="sendMessage">
     <div class="p-4 border-t flex">
-      <input
-        type="text"
-        class="input input-bordered w-full"
+      <textarea
+        class="textarea textarea-bordered w-full"
         placeholder="Type a message..."
         v-model="message"
-        @onInput="(e) => setMessage(e.target.value)"
-      />
+      >
+      </textarea>
       <button type="submit" class="btn btn-primary ms-2">Send</button>
     </div>
   </form>
