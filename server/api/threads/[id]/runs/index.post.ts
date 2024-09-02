@@ -1,27 +1,35 @@
 import { useOpenAI } from "@/composables/useOpenAI"
-import { Readable } from "stream"
 
 export default defineEventHandler(async (event) => {
-  const openai = useOpenAI(event.context.cloudflare.env)
-  const id = getRouterParam(event, "id")
-  const assistant = await openai.findAssistant()
-  const params = await readBody(event)
+  const stream = new ReadableStream({
+    async start(controller) {
+      const openai = useOpenAI(event.context.cloudflare.env)
+      const id = getRouterParam(event, "id")
+      const assistant = await openai.findAssistant()
+      const params = await readBody(event)
 
-  const stream = new Readable({
-    read() {},
-  })
+      const assistantStream = await openai.runThread(id, {
+        assistant_id: assistant.id,
+        ...params,
+      })
 
-  const assistantStream = await openai.runThread(id, {
-    assistant_id: assistant.id,
-    ...params,
-  })
+      assistantStream.on("messageDelta", (messageDelta) => {
+        console.log("Message delta:", typeof messageDelta)
+        controller.enqueue(
+          new TextEncoder().encode(JSON.stringify(messageDelta) + "\n"),
+        )
+      })
 
-  assistantStream.on("messageDelta", (event) => {
-    stream.push(JSON.stringify(event) + "\n")
-  })
+      assistantStream.on("end", () => {
+        controller.close()
+      })
 
-  assistantStream.on("done", () => {
-    stream.push(null)
+      // Handle errors
+      assistantStream.on("error", (error) => {
+        console.error("Stream error:", error)
+        controller.error(error)
+      })
+    },
   })
 
   return sendStream(event, stream)
