@@ -45,8 +45,8 @@ onMounted(async () => {
       </div>
     </li>
     <li v-for="thread in threads" :key="thread.id" class="menu-item">
-      <a
-        :href="`/threads/${thread.id}`"
+      <NuxtLink
+        :to="{ name: 'threads-id', params: { id: thread.id } }"
         :class="{
           flex: true,
           flexRow: true,
@@ -62,7 +62,7 @@ onMounted(async () => {
         >
           X
         </button>
-      </a>
+      </NuxtLink>
     </li>
   </ul>
 </template>
