@@ -80,7 +80,23 @@ const currentMessages = computed(() => {
   return messages.value[currentThread.value] || []
 })
 
+const supportsRequestStreams = () => {
+  let duplexAccessed = false
+
+  const hasContentType = new Request("", {
+    body: new ReadableStream(),
+    method: "POST",
+    get duplex() {
+      duplexAccessed = true
+      return "half"
+    },
+  }).headers.has("Content-Type")
+
+  return duplexAccessed && !hasContentType
+}
+
 onMounted(async () => {
+  console.log("supportsRequestStreams", supportsRequestStreams())
   const { threads: data } = await $fetch("/api/threads")
   threads.value = data
 })
