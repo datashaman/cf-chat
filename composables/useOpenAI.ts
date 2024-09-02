@@ -67,7 +67,7 @@ export const useOpenAI = (env) => {
       return JSON.parse(thread).value
     },
     deleteThread: async (threadId) => {
-      return client.beta.threads.delete(threadId)
+      return client.beta.threads.del(threadId)
     },
     listMessages: async (threadId, query = { order: "asc" }) => {
       let response = null

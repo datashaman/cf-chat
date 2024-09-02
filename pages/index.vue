@@ -29,6 +29,11 @@ const setCurrentThread = async (id) => {
   messages.value[currentThread.value] = data
 }
 
+const deleteThread = async (id) => {
+  await $fetch(`/api/threads/${id}`, { method: "DELETE" })
+  threads.value = threads.value.filter((thread) => thread.id !== id)
+}
+
 const sendMessage = async () => {
   if (!message.value) return
 
@@ -145,10 +150,22 @@ onMounted(async () => {
         <li v-for="thread in threads" :key="thread.id" class="menu-item">
           <a
             href="#"
-            :class="{ active: thread.id == currentThread }"
+            :class="{
+              flex: true,
+              flexRow: true,
+              active: thread.id == currentThread,
+            }"
             @click="() => setCurrentThread(thread.id)"
           >
-            {{ thread.metadata?.title }}
+            <div class="flex-grow">
+              {{ thread.metadata?.title }}
+            </div>
+            <button
+              class="btn btn-square btn-xs btn-error"
+              @click="deleteThread(thread.id)"
+            >
+              X
+            </button>
           </a>
         </li>
       </ul>

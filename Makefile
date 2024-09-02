@@ -12,6 +12,12 @@ schema-local:
 schema-remote:
 	wrangler d1 execute $(DB_DATABASE) --remote --file=./database/schema.sql
 
+clean-local:
+	wrangler d1 execute $(DB_DATABASE) --local --file=./database/clean.sql
+
+clean-remote:
+	wrangler d1 execute $(DB_DATABASE) --remote --file=./database/clean.sql
+
 deploy:
 	wrangler deploy
 
