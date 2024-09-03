@@ -6,9 +6,18 @@ export default defineEventHandler(async ({ context }) => {
   const openai = useOpenAI(context.cloudflare.env)
 
   const dbThreads = await database.listThreads()
-  const threads = await Promise.all(
-    dbThreads.map((id: string) => openai.getThread(id)),
-  )
+
+  const threads = []
+
+  for (const dbThread of dbThreads) {
+    const thread = await openai.getThread(dbThread)
+
+    if (thread) {
+      threads.push(thread)
+    } else {
+      await database.deleteThread(dbThread)
+    }
+  }
 
   return {
     threads,

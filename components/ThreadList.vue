@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted } from "vue"
-
 const props = defineProps({
-  currentThread: String,
+  currentThreadId: String,
 })
+
+const { $bus } = useNuxtApp()
 
 const threads = ref([])
 
@@ -21,7 +21,7 @@ const deleteThread = async (id) => {
   await $fetch(`/api/threads/${id}`, { method: "DELETE" })
   threads.value = threads.value.filter((thread) => thread.id !== id)
 
-  if (props.currentThread === id) {
+  if (props.currentThreadId === id) {
     await navigateTo(`/`)
   }
 }
@@ -29,6 +29,10 @@ const deleteThread = async (id) => {
 onMounted(async () => {
   const { threads: data } = await $fetch("/api/threads")
   threads.value = data
+
+  $bus.on("thread-created", (thread) => {
+    threads.value.unshift(thread)
+  })
 })
 </script>
 <template>
@@ -50,7 +54,7 @@ onMounted(async () => {
         :class="{
           flex: true,
           flexRow: true,
-          active: thread.id == props.currentThread,
+          active: thread.id == props.currentThreadId,
         }"
       >
         <div class="flex-grow">

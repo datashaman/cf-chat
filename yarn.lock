@@ -1552,7 +1552,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/kit@npm:3.13.0, @nuxt/kit@npm:^3.11.2, @nuxt/kit@npm:^3.13.0":
+"@nuxt/kit@npm:3.13.0, @nuxt/kit@npm:^3.11.2, @nuxt/kit@npm:^3.13.0, @nuxt/kit@npm:^3.9.0":
   version: 3.13.0
   resolution: "@nuxt/kit@npm:3.13.0"
   dependencies:
@@ -1812,6 +1812,16 @@ __metadata:
     "@parcel/watcher-win32-x64":
       optional: true
   checksum: 10c0/33b7112094b9eb46c234d824953967435b628d3d93a0553255e9910829b84cab3da870153c3a870c31db186dc58f3b2db81382fcaee3451438aeec4d786a6211
+  languageName: node
+  linkType: hard
+
+"@pinia/nuxt@npm:^0.5.4":
+  version: 0.5.4
+  resolution: "@pinia/nuxt@npm:0.5.4"
+  dependencies:
+    "@nuxt/kit": "npm:^3.9.0"
+    pinia: "npm:^2.2.2"
+  checksum: 10c0/c6aee28d7383f023eda38553e5f6e31ee0352a2bc71944c6e2956e0d983458ff4c374f6bcaa99c87a144fb4296e9d952662dd7f7ebbdd9df90f3a28efad98697
   languageName: node
   linkType: hard
 
@@ -3325,6 +3335,7 @@ __metadata:
   dependencies:
     "@cloudflare/vitest-pool-workers": "npm:^0.4.27"
     "@eslint/js": "npm:^9.9.1"
+    "@pinia/nuxt": "npm:^0.5.4"
     "@types/dompurify": "npm:^3"
     "@vitest/runner": "npm:<1.6.0-0"
     "@vitest/snapshot": "npm:<1.6.0-0"
@@ -3336,8 +3347,10 @@ __metadata:
     globals: "npm:^15.9.0"
     husky: "npm:^9.1.5"
     lint-staged: "npm:^15.2.9"
+    mande: "npm:^2.0.9"
     marked: "npm:^14.1.0"
     marked-linkify-it: "npm:^3.1.11"
+    mitt: "npm:^3.0.1"
     nitro-cloudflare-dev: "npm:^0.1.6"
     nuxt: "npm:^3.13.0"
     openai: "npm:^4.57.0"
@@ -6635,6 +6648,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mande@npm:^2.0.9":
+  version: 2.0.9
+  resolution: "mande@npm:2.0.9"
+  checksum: 10c0/e5de1d70600db15ded7025fe13dc729a78fbaa7518b0520a9f9282b9c633d1f636ec857b9933bc81de20e27e746a0f5fd94d56d586bca047ee4c064f3a302375
+  languageName: node
+  linkType: hard
+
 "marked-linkify-it@npm:^3.1.11":
   version: 3.1.11
   resolution: "marked-linkify-it@npm:3.1.11"
@@ -7753,6 +7773,25 @@ __metadata:
   version: 2.3.0
   resolution: "pify@npm:2.3.0"
   checksum: 10c0/551ff8ab830b1052633f59cb8adc9ae8407a436e06b4a9718bcb27dc5844b83d535c3a8512b388b6062af65a98c49bdc0dd523d8b2617b188f7c8fee457158dc
+  languageName: node
+  linkType: hard
+
+"pinia@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "pinia@npm:2.2.2"
+  dependencies:
+    "@vue/devtools-api": "npm:^6.6.3"
+    vue-demi: "npm:^0.14.10"
+  peerDependencies:
+    "@vue/composition-api": ^1.4.0
+    typescript: ">=4.4.4"
+    vue: ^2.6.14 || ^3.3.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    typescript:
+      optional: true
+  checksum: 10c0/6c30a6e355be294f87a0256d4b2c266d3315d4fc1451c0a17847d03c0e7879faab4d58df2496e0c2b34a54743807bf65b27f8e80e400883d8bb46682f7af3b5f
   languageName: node
   linkType: hard
 
@@ -10289,6 +10328,22 @@ __metadata:
   dependencies:
     ufo: "npm:^1.5.3"
   checksum: 10c0/a3c4b73b4ac0e919632543b6daad6067c2aed03a5805f72730f0c1a52a40f80d122dfa33383c1c466f69df77b5565b52704409efb42e4244243a241ab0392bef
+  languageName: node
+  linkType: hard
+
+"vue-demi@npm:^0.14.10":
+  version: 0.14.10
+  resolution: "vue-demi@npm:0.14.10"
+  peerDependencies:
+    "@vue/composition-api": ^1.0.0-rc.1
+    vue: ^3.0.0-0 || ^2.6.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  bin:
+    vue-demi-fix: bin/vue-demi-fix.js
+    vue-demi-switch: bin/vue-demi-switch.js
+  checksum: 10c0/a9ed8712fa36d01bc13c39757f95f30cebf42d557b99e94bff86d8660c81f2911b41220f7affc023d1ffcc19e13999e4a83019991e264787cca2c616e83aea48
   languageName: node
   linkType: hard
 

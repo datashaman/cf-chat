@@ -1,70 +1,74 @@
 <script setup>
-import { ref } from "vue"
-
 const props = defineProps({
-  currentThread: String,
+  currentThreadId: String,
 })
 
+const threadStore = useThreadStore()
+
+const { $bus } = useNuxtApp()
 const message = ref("")
 const messageList = ref(null)
 
-const sendMessage = async () => {
-  if (!message.value) return
-
-  if (!props.currentThread) {
-    await createThread([{ role: "user", content: message.value }])
-  }
-
-  const userMessage = { role: "user", content: message.value }
+const runThread = async (additionalMessages = []) => {
   const responseMessage = ref("...")
-
-  messageList.value.push({
-    ...userMessage,
-  })
-
-  message.value = ""
 
   messageList.value.push({
     role: "assistant",
     content: responseMessage,
   })
 
-  const response = await $fetch(`/api/threads/${props.currentThread}/runs`, {
-    method: "POST",
-    body: JSON.stringify({
-      additional_messages: [userMessage],
-    }),
-    responseType: "stream",
-  })
-
-  const reader = response.pipeThrough(new TextDecoderStream()).getReader()
-
-  while (true) {
-    const { value, done } = await reader.read()
-
-    if (done) {
-      break
-    }
-
-    value
-      .trim()
-      .split("\n")
-      .forEach((line) => {
-        if (line) {
-          if (responseMessage.value === "...") {
-            responseMessage.value = ""
-          }
-
-          responseMessage.value += JSON.parse(line).content[0].text.value
-        }
-      })
-  }
+  return threadStore.runThread(
+    responseMessage,
+    {
+      additional_messages: additionalMessages,
+    },
+    props.currentThreadId,
+  )
 }
+
+const sendMessage = async () => {
+  if (!message.value) return
+
+  const userMessage = { role: "user", content: message.value }
+
+  if (!props.currentThreadId) {
+    const { thread } = await threadStore.createThread({
+      messages: [userMessage],
+      metadata: { title: "New Thread" },
+    })
+
+    await navigateTo(`/threads/${thread.id}`)
+
+    return
+  }
+
+  if (messageList.value) {
+    messageList.value.push({
+      ...userMessage,
+    })
+  }
+
+  message.value = ""
+
+  await runThread([userMessage])
+}
+
+onMounted(() => {
+  threadStore.fetchThread(props.currentThreadId)
+
+  $bus.on("threads.run", async () => {
+    await runThread()
+  })
+})
 </script>
 
 <template>
   <div class="flex-grow p-6 overflow-y-auto">
-    <MessageList :currentThread="props.currentThread" ref="messageList" />
+    <MessageList
+      v-if="props.currentThreadId"
+      :currentThreadId="props.currentThreadId"
+      ref="messageList"
+    />
   </div>
 
   <form @submit.prevent="sendMessage">

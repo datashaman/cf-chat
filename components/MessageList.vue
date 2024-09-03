@@ -1,12 +1,12 @@
 <script setup>
-import { ref, onMounted } from "vue"
 import { marked } from "marked"
 import markedLinkifyIt from "marked-linkify-it"
 import DOMPurify from "dompurify"
 
 const props = defineProps({
-  currentThread: String,
+  currentThreadId: String,
 })
+const { $bus } = useNuxtApp()
 
 marked
   .use({
@@ -29,15 +29,21 @@ const push = (message) => {
 }
 
 onMounted(async () => {
-  if (!props.currentThread) {
-    return
+  let data = []
+
+  try {
+    let { messages: data } = await $fetch(
+      `/api/threads/${props.currentThreadId}/messages`,
+    )
+  } catch (error) {
+    console.error(error)
   }
 
-  const { messages: data } = await $fetch(
-    `/api/threads/${props.currentThread}/messages`,
-  )
-
   messages.value = data
+
+  if (messages.value.length <= 1) {
+    $bus.emit("run-thread")
+  }
 })
 
 defineExpose({
@@ -46,7 +52,7 @@ defineExpose({
 </script>
 <template>
   <div>
-    <template v-if="props.currentThread">
+    <template v-if="props.currentThreadId">
       <template v-for="message in messages" :key="message.id">
         <div v-if="message.role === 'user'" class="chat chat-end">
           <div

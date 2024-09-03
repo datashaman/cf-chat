@@ -1,3 +1,3 @@
 <template>
-  <ChatBox :currentThread="$route.params.id" />
+  <ChatBox :currentThreadId="$route.params.id" />
 </template>

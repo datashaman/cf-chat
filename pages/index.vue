@@ -1,3 +1,3 @@
 <template>
-  <ChatBox currentThread="" />
+  <ChatBox currentThreadId="" />
 </template>

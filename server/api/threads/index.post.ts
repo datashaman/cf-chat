@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
   const database = useDatabase(event.context)
   const openai = useOpenAI(event.context.cloudflare.env)
   const body = await readBody(event)
+
   const thread = await openai.createThread(body)
   await database.createThread(thread.id)
 

@@ -12,5 +12,5 @@ export default defineNuxtConfig({
   experimental: {
     appManifest: false,
   },
-  modules: ["nitro-cloudflare-dev"],
+  modules: ["nitro-cloudflare-dev", "@pinia/nuxt"],
 })
