@@ -70,7 +70,7 @@ const sendMessage = async () => {
   const userMessage = { role: "user", content: message.value }
 
   if (!route.params.id) {
-    await worker.postMessage({
+    await worker.port.postMessage({
       type: "createThread",
       payload: {
         messages: [userMessage],
@@ -122,14 +122,12 @@ onMounted(async () => {
     },
   })
 
-  worker.postMessage({
+  worker.port.postMessage({
     type: "fetchMessages",
     payload: { threadId: route.params.id },
   })
-})
 
-onBeforeUnmount(() => {
-  worker.terminate()
+  worker.port.start()
 })
 </script>
 

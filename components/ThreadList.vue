@@ -5,7 +5,7 @@ const threads = ref([])
 let worker
 
 const createThread = async () => {
-  return worker.postMessage({
+  return worker.port.postMessage({
     type: "createThread",
     payload: {
       metadata: { title: "New Thread" },
@@ -14,7 +14,7 @@ const createThread = async () => {
 }
 
 const deleteThread = async (threadId) => {
-  return worker.postMessage({
+  return worker.port.postMessage({
     type: "deleteThread",
     payload: { threadId },
   })
@@ -43,11 +43,9 @@ onMounted(async () => {
     return navigateTo(`/threads/${thread.id}`)
   })
 
-  worker.postMessage({ type: "getThreads" })
-})
+  worker.port.postMessage({ type: "getThreads" })
 
-onBeforeUnmount(() => {
-  worker.terminate()
+  worker.port.start()
 })
 </script>
 <template>

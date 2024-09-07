@@ -1,7 +1,7 @@
 export default (handlers) => {
   const { $bus } = useNuxtApp()
 
-  const worker = new Worker(
+  const worker = new SharedWorker(
     new URL("../workers/threads.worker.js", import.meta.url),
     {
       type: "module",
@@ -16,7 +16,7 @@ export default (handlers) => {
     $bus.emit("newThread", payload)
   }
 
-  worker.onmessage = (message) => {
+  worker.port.onmessage = (message) => {
     const { type, payload } = message.data
     const handler = handlers[type]
     if (handler) handler(payload)
