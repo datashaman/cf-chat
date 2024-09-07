@@ -1,12 +1,16 @@
 <script setup>
-import { ref, onMounted } from "vue"
 import { marked } from "marked"
 import markedLinkifyIt from "marked-linkify-it"
 import DOMPurify from "dompurify"
 
 const props = defineProps({
-  currentThread: String,
+  currentThreadId: String,
 })
+
+const threadStore = useThreadStore()
+
+const messages = ref([])
+const message = ref("")
 
 marked
   .use({
@@ -14,39 +18,64 @@ marked
   })
   .use(markedLinkifyIt())
 
-const messages = ref([])
-
 const renderMarkdown = (content) => {
   const html = marked.parseInline(content)
   return DOMPurify.sanitize(html)
 }
 
-const push = (message) => {
+const runThread = async (additionalMessages = []) => {
+  const responseMessage = ref("...")
+
   messages.value.push({
-    id: messages.value.length + 1,
-    ...message,
+    role: "assistant",
+    content: responseMessage,
   })
+
+  return threadStore.runThread(
+    {
+      additional_messages: additionalMessages,
+    },
+    (delta) => {
+      if (responseMessage.value === "...") {
+        responseMessage.value = ""
+      }
+
+      responseMessage.value += delta
+    },
+  )
 }
 
-onMounted(async () => {
-  if (!props.currentThread) {
+const sendMessage = async () => {
+  if (!message.value) return
+
+  const userMessage = { role: "user", content: message.value }
+
+  if (!props.currentThreadId) {
+    const { thread } = await threadStore.createThread({
+      messages: [userMessage],
+      metadata: { title: "New Thread" },
+    })
+
+    await navigateTo(`/threads/${thread.id}`)
+
     return
   }
 
-  const { messages: data } = await $fetch(
-    `/api/threads/${props.currentThread}/messages`,
-  )
+  messages.value.push(userMessage)
+  message.value = ""
 
-  messages.value = data
-})
+  await runThread([userMessage])
+}
 
-defineExpose({
-  push,
+onMounted(async () => {
+  await threadStore.changeCurrentThread(props.currentThreadId)
+  if (props.currentThreadId) messages.value = await threadStore.fetchMessages()
 })
 </script>
+
 <template>
-  <div>
-    <template v-if="props.currentThread">
+  <div class="flex-grow p-6 overflow-y-auto">
+    <template v-if="props.currentThreadId">
       <template v-for="message in messages" :key="message.id">
         <div v-if="message.role === 'user'" class="chat chat-end">
           <div
@@ -66,4 +95,18 @@ defineExpose({
     </template>
     <div v-else>Select a thread to start chatting</div>
   </div>
+
+  <form @submit.prevent="sendMessage">
+    <div class="p-4 border-t flex">
+      <textarea
+        class="textarea textarea-bordered w-full"
+        placeholder="Type a message..."
+        v-model="message"
+        @keydown.meta.enter="sendMessage"
+        @keydown.ctrl.enter="sendMessage"
+      >
+      </textarea>
+      <button type="submit" class="btn btn-primary btn-lg ms-4">Send</button>
+    </div>
+  </form>
 </template>

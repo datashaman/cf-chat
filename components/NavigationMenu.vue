@@ -1,13 +1,13 @@
 <template>
   <ul class="menu">
     <li class="menu-item">
-      <a href="#">Welcome</a>
+      <NuxtLink href="/">Welcome</NuxtLink>
     </li>
     <li class="menu-item">
-      <a href="#">About</a>
+      <NuxtLink href="/about">About</NuxtLink>
     </li>
     <li class="menu-item">
-      <a href="#">Contact</a>
+      <NuxtLink href="/contact">Contact</NuxtLink>
     </li>
   </ul>
 </template>

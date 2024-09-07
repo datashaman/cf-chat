@@ -1,4 +1,5 @@
 import OpenAI from "openai"
+import { ref } from "vue"
 
 export const useOpenAI = (env) => {
   const client = new OpenAI({
@@ -17,19 +18,25 @@ export const useOpenAI = (env) => {
   }
 
   const listAssistants = async () => {
-    return client.beta.assistants.list()
+    const assistants = []
+
+    for await (const assistant of client.beta.assistants.list()) {
+      assistants.push(assistant)
+    }
+
+    return assistants
   }
 
   const findAssistant = async (name = env.OPENAI_ASSISTANT_NAME) => {
     const assistants = await listAssistants()
-    return assistants.data.find((assistant) => assistant.name === name)
+    return assistants.find((assistant) => assistant.name === name)
   }
 
-  const createAssistant = async (params) => {
+  const createAssistant = (params) => {
     return client.beta.assistants.create(params)
   }
 
-  const updateAssistant = async (assistantId, params) => {
+  const updateAssistant = (assistantId, params) => {
     return client.beta.assistants.update(assistantId, params)
   }
 
@@ -45,55 +52,46 @@ export const useOpenAI = (env) => {
         ? updateAssistant(assistant.id, params)
         : createAssistant(params)
     },
-    deleteAssistant: async (assistantId) => {
-      return client.beta.assistants.delete(assistantId)
+    deleteAssistant: (assistantId) => {
+      return client.beta.assistants.del(assistantId)
     },
-    createThread: async (params = {}) => {
+    createThread: (params = {}) => {
       return client.beta.threads.create(params)
     },
-    getThread: async (threadId) => {
-      const cache_key = `thread-${threadId}`
-      let thread = await env.CACHE.get(cache_key)
-
-      if (!thread) {
-        thread = JSON.stringify({
-          created_at: new Date() / 1000,
-          value: await client.beta.threads.retrieve(threadId),
-        })
-
-        await env.CACHE.put(`thread-${threadId}`, thread)
+    getThread: (threadId) => {
+      try {
+        return client.beta.threads.retrieve(threadId)
+      } catch (error) {
+        console.error(error)
       }
-
-      return JSON.parse(thread).value
     },
-    deleteThread: async (threadId) => {
+    deleteThread: (threadId) => {
       return client.beta.threads.del(threadId)
     },
     listMessages: async (threadId, query = { order: "asc" }) => {
-      let response = null
       const messages = []
 
-      do {
-        response = await client.beta.threads.messages.list(threadId, query)
-        messages.push(...response.data)
-      } while (response.has_more)
-
-      return messages.map((message) => {
-        return {
+      for await (const message of client.beta.threads.messages.list(
+        threadId,
+        query,
+      )) {
+        messages.push({
           id: message.id,
           created_at: message.created_at,
           content: message.content[0].text.value,
           role: message.role,
-        }
-      })
+        })
+      }
+
+      return messages
     },
-    createMessage: async (threadId, params) => {
+    createMessage: (threadId, params) => {
       return client.beta.threads.messages.create(threadId, params)
     },
-    deleteMessage: async (threadId, messageId) => {
-      return client.beta.threads.messages.delete(threadId, messageId)
+    deleteMessage: (threadId, messageId) => {
+      return client.beta.threads.messages.del(threadId, messageId)
     },
-    runThread: async (threadId, params) => {
+    runThread: (threadId, params) => {
       return client.beta.threads.runs.stream(threadId, params)
     },
   }

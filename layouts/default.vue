@@ -4,7 +4,7 @@
       <div class="w-64 flex-none border-r">
         <NavigationMenu />
         <KeepAlive>
-          <ThreadList :currentThread="$route.params.id" />
+          <ThreadList :currentThreadId="$route.params.id" />
         </KeepAlive>
       </div>
 

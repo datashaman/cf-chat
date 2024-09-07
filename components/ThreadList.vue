@@ -1,34 +1,29 @@
 <script setup>
-import { ref, onMounted } from "vue"
-
 const props = defineProps({
-  currentThread: String,
+  currentThreadId: String,
 })
 
-const threads = ref([])
+const threadStore = useThreadStore()
 
 const createThread = async (messages = []) => {
-  const { thread } = await $fetch("/api/threads", {
-    method: "POST",
-    body: JSON.stringify({ messages, metadata: { title: "New Thread" } }),
+  const thread = await threadStore.createThread({
+    messages,
+    metadata: { title: "New Thread" },
   })
-  threads.value.unshift(thread)
 
   await navigateTo(`/threads/${thread.id}`)
 }
 
 const deleteThread = async (id) => {
-  await $fetch(`/api/threads/${id}`, { method: "DELETE" })
-  threads.value = threads.value.filter((thread) => thread.id !== id)
+  await threadStore.deleteThread(id)
 
-  if (props.currentThread === id) {
+  if (props.currentThreadId === id) {
     await navigateTo(`/`)
   }
 }
 
 onMounted(async () => {
-  const { threads: data } = await $fetch("/api/threads")
-  threads.value = data
+  await threadStore.fetchThreads()
 })
 </script>
 <template>
@@ -44,13 +39,17 @@ onMounted(async () => {
         </button>
       </div>
     </li>
-    <li v-for="thread in threads" :key="thread.id" class="menu-item">
+    <li
+      v-for="thread in threadStore.threads"
+      :key="thread.id"
+      class="menu-item"
+    >
       <NuxtLink
         :to="{ name: 'threads-id', params: { id: thread.id } }"
         :class="{
           flex: true,
           flexRow: true,
-          active: thread.id == props.currentThread,
+          active: thread.id == props.currentThreadId,
         }"
       >
         <div class="flex-grow">
