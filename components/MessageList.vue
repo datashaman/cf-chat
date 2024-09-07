@@ -3,14 +3,13 @@ import { marked } from "marked"
 import markedLinkifyIt from "marked-linkify-it"
 import DOMPurify from "dompurify"
 
-const props = defineProps({
-  currentThreadId: String,
-})
-
-const threadStore = useThreadStore()
+const route = useRoute()
 
 const messages = ref([])
 const message = ref("")
+let content = ref("")
+
+let worker
 
 marked
   .use({
@@ -23,26 +22,45 @@ const renderMarkdown = (content) => {
   return DOMPurify.sanitize(html)
 }
 
-const runThread = async (additionalMessages = []) => {
-  const content = ref("...")
+const runThread = async (params = {}) => {
+  content = ref("...")
 
   messages.value.push({
     role: "assistant",
     content: content,
   })
 
-  return threadStore.runThread(
-    {
-      additional_messages: additionalMessages,
-    },
-    (delta) => {
-      if (content.value === "...") {
-        content.value = ""
-      }
+  // Not using mande here because we need a stream response
+  const response = await $fetch(`/api/threads/${route.params.id}/runs`, {
+    method: "POST",
+    body: JSON.stringify(params),
+    responseType: "stream",
+  })
 
-      content.value += delta
-    },
-  )
+  const reader = response.pipeThrough(new TextDecoderStream()).getReader()
+
+  while (true) {
+    const { value, done } = await reader.read()
+
+    if (done) {
+      break
+    }
+
+    value
+      .trim()
+      .split("\n")
+      .forEach((event) => {
+        if (event) {
+          const delta = JSON.parse(event).content[0].text.value
+
+          if (content.value === "...") {
+            content.value = ""
+          }
+
+          content.value += delta
+        }
+      })
+  }
 }
 
 const sendMessage = async () => {
@@ -50,13 +68,14 @@ const sendMessage = async () => {
 
   const userMessage = { role: "user", content: message.value }
 
-  if (!props.currentThreadId) {
-    const { thread } = await threadStore.createThread({
-      messages: [userMessage],
-      metadata: { title: "New Thread" },
+  if (!route.params.id) {
+    await worker.postMessage({
+      type: "createThread",
+      payload: {
+        messages: [userMessage],
+        metadata: { title: "New Thread" },
+      },
     })
-
-    await navigateTo(`/threads/${thread.id}`)
 
     return
   }
@@ -64,18 +83,45 @@ const sendMessage = async () => {
   messages.value.push(userMessage)
   message.value = ""
 
-  await runThread([userMessage])
+  return runThread({
+    additional_messages: [userMessage],
+  })
 }
 
+watch(
+  () => route.params.id,
+  async (newId) => {
+    messages.value = newId ? await threadStore.fetchMessages(newId) : []
+  },
+)
+
 onMounted(async () => {
-  await threadStore.changeCurrentThread(props.currentThreadId)
-  if (props.currentThreadId) messages.value = await threadStore.fetchMessages()
+  worker = useWorker({
+    delta: (payload) => {
+      if (content.value === "...") {
+        content.value = ""
+      }
+      content.value += payload.delta
+    },
+    messages: (payload) => {
+      messages.value = payload.messages
+    },
+  })
+
+  worker.postMessage({
+    type: "fetchMessages",
+    payload: { threadId: route.params.id },
+  })
+})
+
+onBeforeUnmount(() => {
+  worker.terminate()
 })
 </script>
 
 <template>
   <div class="flex-grow p-6 overflow-y-auto">
-    <template v-if="props.currentThreadId">
+    <template v-if="$route.params.id">
       <template v-for="message in messages" :key="message.id">
         <div v-if="message.role === 'user'" class="chat chat-end">
           <div
