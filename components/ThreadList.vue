@@ -1,9 +1,6 @@
 <script setup>
-const props = defineProps({
-  currentThreadId: String,
-})
-
-const threadStore = useThreadStore()
+const route = useRoute()
+const threads = ref([])
 
 const createThread = async (messages = []) => {
   const thread = await threadStore.createThread({
