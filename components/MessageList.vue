@@ -116,9 +116,13 @@ onMounted(async () => {
       }
       content.value += payload.delta
     },
-    messages: (payload) => {
+    messages: async (payload) => {
       messages.value = payload.messages
       scrollToBottom()
+
+      if (route.params.id && messages.value.length <= 1) {
+        await runThread()
+      }
     },
   })
 
