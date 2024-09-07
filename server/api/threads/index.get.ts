@@ -2,6 +2,8 @@ import { useDatabase } from "@/composables/useDatabase"
 import { useOpenAI } from "@/composables/useOpenAI"
 
 export default defineEventHandler(async ({ context }) => {
+  console.log(context)
+
   const database = useDatabase(context)
   const openai = useOpenAI(context.cloudflare.env)
 
