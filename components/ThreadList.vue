@@ -24,7 +24,7 @@ onMounted(async () => {
   const { $bus } = useNuxtApp()
 
   worker = useWorker({
-    threadDeleted: async (payload) => {
+    deletedThread: async (payload) => {
       threads.value = threads.value.filter(
         (thread) => thread.id !== payload.thread.id,
       )

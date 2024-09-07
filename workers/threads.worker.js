@@ -79,7 +79,7 @@ self.createThread = async (payload) => {
 self.deleteThread = async (payload) => {
   self.postMessage({
     type: "deletedThread",
-    payload: await mande("/api/threads/${payload.threadId}").delete(),
+    payload: await mande(`/api/threads/${payload.threadId}`).delete(),
   })
 }
 
