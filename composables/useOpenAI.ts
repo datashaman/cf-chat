@@ -68,14 +68,16 @@ export const useOpenAI = (env) => {
     deleteThread: (threadId) => {
       return client.beta.threads.del(threadId)
     },
-    listMessages: async (threadId, query = { order: "asc" }) => {
+    listMessages: async (threadId, query = {}) => {
       const messages = []
+      query.order = "asc"
 
       for await (const message of client.beta.threads.messages.list(
         threadId,
         query,
       )) {
         messages.push({
+          threadId: threadId,
           id: message.id,
           created_at: message.created_at,
           content: message.content[0].text.value,
