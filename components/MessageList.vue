@@ -9,8 +9,6 @@ const props = defineProps({
 
 const threadStore = useThreadStore()
 
-const { $bus } = useNuxtApp()
-
 const messages = ref([])
 const message = ref("")
 

@@ -1,8 +1,6 @@
 import { mande } from "mande"
 
 export const useThreadStore = defineStore("threads", () => {
-  const { $bus } = useNuxtApp()
-
   const currentThreadId = ref("")
   const threads = ref([])
 
