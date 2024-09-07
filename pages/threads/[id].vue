@@ -1,3 +1,3 @@
 <template>
-  <MessageList :currentThreadId="$route.params.id" />
+  <MessageList />
 </template>

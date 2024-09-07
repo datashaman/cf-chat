@@ -2,25 +2,52 @@
 const route = useRoute()
 const threads = ref([])
 
-const createThread = async (messages = []) => {
-  const thread = await threadStore.createThread({
-    messages,
-    metadata: { title: "New Thread" },
-  })
+let worker
 
-  await navigateTo(`/threads/${thread.id}`)
+const createThread = async () => {
+  return worker.postMessage({
+    type: "createThread",
+    payload: {
+      metadata: { title: "New Thread" },
+    },
+  })
 }
 
-const deleteThread = async (id) => {
-  await threadStore.deleteThread(id)
-
-  if (props.currentThreadId === id) {
-    await navigateTo(`/`)
-  }
+const deleteThread = async (threadId) => {
+  return worker.postMessage({
+    type: "deleteThread",
+    payload: { threadId },
+  })
 }
 
 onMounted(async () => {
-  await threadStore.fetchThreads()
+  const { $bus } = useNuxtApp()
+
+  worker = useWorker({
+    threadDeleted: async (payload) => {
+      threads.value = threads.value.filter(
+        (thread) => thread.id !== payload.thread.id,
+      )
+
+      if (route.params.id === payload.thread.id) {
+        await navigateTo(`/`)
+      }
+    },
+    threads: (payload) => (threads.value = payload.threads),
+  })
+
+  // This is done via bus because a thread can be created
+  // from thread list and / or message list components
+  $bus.on("newThread", async ({ thread }) => {
+    threads.value = [thread, ...threads.value]
+    return navigateTo(`/threads/${thread.id}`)
+  })
+
+  worker.postMessage({ type: "getThreads" })
+})
+
+onBeforeUnmount(() => {
+  worker.terminate()
 })
 </script>
 <template>
@@ -28,25 +55,18 @@ onMounted(async () => {
     <li class="menu-title flex flex-row">
       <div class="flex-grow">Threads</div>
       <div>
-        <button
-          class="btn btn-square btn-primary btn-xs"
-          @click="() => createThread()"
-        >
+        <button class="btn btn-square btn-primary btn-xs" @click="createThread">
           +
         </button>
       </div>
     </li>
-    <li
-      v-for="thread in threadStore.threads"
-      :key="thread.id"
-      class="menu-item"
-    >
+    <li v-for="thread in threads" :key="thread.id" class="menu-item">
       <NuxtLink
         :to="{ name: 'threads-id', params: { id: thread.id } }"
         :class="{
           flex: true,
           flexRow: true,
-          active: thread.id == props.currentThreadId,
+          active: thread.id == route.params.id,
         }"
       >
         <div class="flex-grow">
