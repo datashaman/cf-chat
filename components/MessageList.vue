@@ -58,6 +58,7 @@ const runThread = async (params = {}) => {
           }
 
           content.value += delta
+          scrollToBottom()
         }
       })
   }
@@ -81,6 +82,8 @@ const sendMessage = async () => {
   }
 
   messages.value.push(userMessage)
+  scrollToBottom()
+
   message.value = ""
 
   return runThread({
@@ -92,8 +95,18 @@ watch(
   () => route.params.id,
   async (newId) => {
     messages.value = newId ? await threadStore.fetchMessages(newId) : []
+
+    const chat = document.querySelector(".messages")
+    chat.scrollTop = chat.scrollHeight
   },
 )
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    const chat = document.querySelector(".messages")
+    chat.scrollTop = chat.scrollHeight
+  })
+}
 
 onMounted(async () => {
   worker = useWorker({
@@ -105,6 +118,7 @@ onMounted(async () => {
     },
     messages: (payload) => {
       messages.value = payload.messages
+      scrollToBottom()
     },
   })
 
@@ -120,7 +134,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex-grow p-6 overflow-y-auto">
+  <div class="messages flex-grow p-6 overflow-y-auto">
     <template v-if="$route.params.id">
       <template v-for="message in messages" :key="message.id">
         <div v-if="message.role === 'user'" class="chat chat-end">
