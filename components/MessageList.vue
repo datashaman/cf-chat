@@ -24,11 +24,11 @@ const renderMarkdown = (content) => {
 }
 
 const runThread = async (additionalMessages = []) => {
-  const responseMessage = ref("...")
+  const content = ref("...")
 
   messages.value.push({
     role: "assistant",
-    content: responseMessage,
+    content: content,
   })
 
   return threadStore.runThread(
@@ -36,11 +36,11 @@ const runThread = async (additionalMessages = []) => {
       additional_messages: additionalMessages,
     },
     (delta) => {
-      if (responseMessage.value === "...") {
-        responseMessage.value = ""
+      if (content.value === "...") {
+        content.value = ""
       }
 
-      responseMessage.value += delta
+      content.value += delta
     },
   )
 }

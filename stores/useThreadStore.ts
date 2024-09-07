@@ -34,6 +34,7 @@ export const useThreadStore = defineStore("threads", () => {
   }
 
   async function runThread(params, callback) {
+    // Not using mande here because we need a stream response
     const response = await $fetch(
       `/api/threads/${currentThreadId.value}/runs`,
       {
