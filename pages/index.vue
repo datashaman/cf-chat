@@ -1,3 +1,3 @@
 <template>
-  <ChatBox currentThreadId="" />
+  <MessageList currentThreadId="" />
 </template>
