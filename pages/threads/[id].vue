@@ -1,3 +1,7 @@
 <template>
-  <MessageList />
+  <div>
+    <NuxtLayout>
+      <MessageList />
+    </NuxtLayout>
+  </div>
 </template>
