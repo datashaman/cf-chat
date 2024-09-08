@@ -10,6 +10,7 @@ const logout = async () => {
   <div>
     <AuthState v-slot="{ loggedIn, user, clear }">
       <div v-if="loggedIn">
+        {{ user }}
         <p>Welcome, {{ user.name }}!</p>
         <button @click="logout">Logout</button>
       </div>
