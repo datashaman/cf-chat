@@ -13,4 +13,9 @@ export default defineNuxtConfig({
     appManifest: false,
   },
   modules: ["nitro-cloudflare-dev", "@pinia/nuxt"],
+  vite: {
+    worker: {
+      format: "es",
+    },
+  },
 })
