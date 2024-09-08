@@ -1247,6 +1247,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroicons/vue@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@heroicons/vue@npm:2.1.5"
+  peerDependencies:
+    vue: ">= 3"
+  checksum: 10c0/64037ec72c2b43f69cd4ce6ac15e6a6f7ffc9d3bdf41eb2f40bfd4cde17882e19f8a89259a05c067ad33be3d7c59581d51f8b8c0c8e2053ab5e557223211952c
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/module-importer@npm:^1.0.1":
   version: 1.0.1
   resolution: "@humanwhocodes/module-importer@npm:1.0.1"
@@ -3408,6 +3417,7 @@ __metadata:
   dependencies:
     "@cloudflare/vitest-pool-workers": "npm:^0.4.27"
     "@eslint/js": "npm:^9.9.1"
+    "@heroicons/vue": "npm:^2.1.5"
     "@pinia/nuxt": "npm:^0.5.4"
     "@types/dompurify": "npm:^3"
     "@vitest/runner": "npm:<1.6.0-0"
