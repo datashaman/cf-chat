@@ -5,10 +5,8 @@ export default oauthGoogleEventHandler({
   async onSuccess(event, { user, tokens }) {
     console.log("Google OAuth success:", user)
 
-    await setUserSession(event, {
-      provider: "google",
-      user,
-    })
+    await setUserSession(event, user)
+
     return sendRedirect(event, "/")
   },
   // Optional, will return a json error and 401 status code by default

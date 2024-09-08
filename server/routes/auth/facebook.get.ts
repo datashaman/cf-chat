@@ -5,10 +5,8 @@ export default oauthFacebookEventHandler({
   async onSuccess(event, { user, tokens }) {
     console.log("Facebook OAuth success:", user)
 
-    await setUserSession(event, {
-      provider: "facebook",
-      user,
-    })
+    await setUserSession(event, user)
+
     return sendRedirect(event, "/")
   },
   // Optional, will return a json error and 401 status code by default
