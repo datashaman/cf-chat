@@ -7,15 +7,17 @@ const logout = async () => {
 }
 </script>
 <template>
-  <div>
-    <AuthState v-slot="{ loggedIn, user, clear }">
+  <div class="p-2">
+    <AuthState v-slot="{ loggedIn, user }">
       <div v-if="loggedIn">
-        {{ user }}
-        <p>Welcome, {{ user.name }}!</p>
-        <button @click="logout">Logout</button>
-      </div>
-      <div v-else>
-        <p>You are not logged in.</p>
+        <div class="p-4">
+          <h2 class="font-bold text-3xl">Welcome!</h2>
+          <p>You're logged in as</p>
+          <p>{{ user.name }}.</p>
+          <div class="card-actions mt-2">
+            <button @click="logout" class="btn btn-primary">Logout</button>
+          </div>
+        </div>
       </div>
     </AuthState>
   </div>
