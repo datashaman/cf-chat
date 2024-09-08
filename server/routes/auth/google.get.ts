@@ -6,9 +6,8 @@ export default oauthGoogleEventHandler({
     console.log("Google OAuth success:", user)
 
     await setUserSession(event, {
-      user: {
-        facebookId: user.id,
-      },
+      provider: "google",
+      user,
     })
     return sendRedirect(event, "/")
   },

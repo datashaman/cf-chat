@@ -6,9 +6,8 @@ export default oauthGitHubEventHandler({
     console.log("GitHub OAuth success:", user)
 
     await setUserSession(event, {
-      user: {
-        githubId: user.id,
-      },
+      provider: "github",
+      user,
     })
     return sendRedirect(event, "/")
   },

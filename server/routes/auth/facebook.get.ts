@@ -6,9 +6,8 @@ export default oauthFacebookEventHandler({
     console.log("Facebook OAuth success:", user)
 
     await setUserSession(event, {
-      user: {
-        facebookId: user.id,
-      },
+      provider: "facebook",
+      user,
     })
     return sendRedirect(event, "/")
   },
