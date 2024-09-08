@@ -1,12 +1,17 @@
 <script setup>
 const { loggedIn, user, clear } = useUserSession()
+
+const logout = async () => {
+  await clear()
+  return navigateTo("/login")
+}
 </script>
 <template>
   <div>
     <AuthState v-slot="{ loggedIn, user, clear }">
       <div v-if="loggedIn">
         <p>Welcome, {{ user.name }}!</p>
-        <button @click="clear">Logout</button>
+        <button @click="logout">Logout</button>
       </div>
       <div v-else>
         <p>You are not logged in.</p>
