@@ -2,7 +2,6 @@
   <div>
     <div class="flex h-screen bg-base-100">
       <div class="w-64 flex-none border-r">
-        <NavigationMenu />
         <KeepAlive>
           <ThreadList />
         </KeepAlive>

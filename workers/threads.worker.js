@@ -6,17 +6,22 @@ const addMany = async (db, storeName, records) => {
     const objectStore = transaction.objectStore(storeName)
 
     // Iterate through the records and add them
+    let count = 0
     for (const record of records) {
       const request = objectStore.add(record)
 
       request.onerror = function () {
         console.error("Error adding record:", request.error)
       }
+
+      request.onsuccess = function () {
+        count++
+      }
     }
 
     // Resolve or reject the promise based on the transaction outcome
     transaction.oncomplete = function () {
-      console.log("All records added successfully")
+      console.log(`${count} messages added`)
       resolve()
     }
 
@@ -62,11 +67,33 @@ self.withThreads = (callback) => {
   }
 }
 
-self.getThreads = async () => {
+self.fetchThreads = async () => {
   self.postMessage({
     type: "threads",
     payload: await mande("/api/threads").get(),
   })
+}
+
+self.fetchThread = async (payload) => {
+  try {
+    self.postMessage({
+      type: "thread",
+      payload: {
+        thread: await mande(`/api/threads/${payload.threadId}`).get(),
+      },
+    })
+  } catch (error) {
+    if (error.response.status === 404) {
+      self.postMessage({
+        type: "thread",
+        payload: { thread: null },
+      })
+
+      return
+    }
+
+    throw error
+  }
 }
 
 self.createThread = async (payload) => {
@@ -77,9 +104,43 @@ self.createThread = async (payload) => {
 }
 
 self.deleteThread = async (payload) => {
-  self.postMessage({
-    type: "deletedThread",
-    payload: await mande(`/api/threads/${payload.threadId}`).delete(),
+  self.withMessages(async (db) => {
+    const transaction = db.transaction(["messages"], "readwrite")
+    const store = transaction.objectStore("messages")
+
+    const request = store
+      .index("threadId")
+      .getAllKeys(IDBKeyRange.only(payload.threadId))
+
+    request.onsuccess = async (event) => {
+      console.log(request, event)
+      const keys = event.target.result
+
+      keys.forEach(async (key) => {
+        try {
+          await store.delete(key)
+        } catch (error) {
+          console.error("Error deleting message", error)
+        }
+      })
+    }
+
+    request.onerror = (event) => {
+      console.error("Error deleting messages", event)
+    }
+
+    transaction.onerror = (event) => {
+      console.error("Transaction failed", event)
+    }
+
+    transaction.oncomplete = async (event) => {
+      console.log("All messages deleted successfully")
+
+      self.postMessage({
+        type: "deletedThread",
+        payload: await mande(`/api/threads/${payload.threadId}`).delete(),
+      })
+    }
   })
 }
 
@@ -91,7 +152,7 @@ self.fetchMessages = async (payload) => {
 
   self.withMessages(async (db) => {
     const store = db
-      .transaction("messages", IDBTransaction.READ_WRITE)
+      .transaction("messages", "readwrite")
       .objectStore("messages")
 
     const request = store.index("threadId").getAll(payload.threadId)

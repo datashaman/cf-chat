@@ -91,16 +91,6 @@ const sendMessage = async () => {
   })
 }
 
-watch(
-  () => route.params.id,
-  async (newId) => {
-    messages.value = newId ? await threadStore.fetchMessages(newId) : []
-
-    const chat = document.querySelector(".messages")
-    chat.scrollTop = chat.scrollHeight
-  },
-)
-
 const scrollToBottom = () => {
   nextTick(() => {
     const chat = document.querySelector(".messages")
@@ -124,12 +114,26 @@ onMounted(async () => {
         await runThread()
       }
     },
+    thread: async (payload) => {
+      if (!payload.thread) {
+        await navigateTo("/")
+
+        return
+      }
+
+      worker.postMessage({
+        type: "fetchMessages",
+        payload: { threadId: route.params.id },
+      })
+    },
   })
 
-  worker.postMessage({
-    type: "fetchMessages",
-    payload: { threadId: route.params.id },
-  })
+  if (route.params.id) {
+    worker.postMessage({
+      type: "fetchThread",
+      payload: { threadId: route.params.id },
+    })
+  }
 })
 
 onBeforeUnmount(() => {
@@ -157,7 +161,10 @@ onBeforeUnmount(() => {
         </div>
       </template>
     </template>
-    <div v-else>Select a thread to start chatting</div>
+    <div v-else>
+      Select a thread to continue chatting, or send a message to start a new
+      thread.
+    </div>
   </div>
 
   <form @submit.prevent="sendMessage">
@@ -170,7 +177,7 @@ onBeforeUnmount(() => {
         @keydown.ctrl.enter="sendMessage"
       >
       </textarea>
-      <button type="submit" class="btn btn-primary btn-lg ms-4">Send</button>
+      <button type="submit" class="btn btn-primary ms-4">Send</button>
     </div>
   </form>
 </template>
