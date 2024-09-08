@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   experimental: {
     appManifest: false,
   },
-  modules: ["nitro-cloudflare-dev", "@pinia/nuxt"],
+  modules: ["nitro-cloudflare-dev", "@pinia/nuxt", "nuxt-auth-utils"],
   vite: {
     worker: {
       format: "es",
