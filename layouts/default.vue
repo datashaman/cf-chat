@@ -2,7 +2,7 @@
 const { loggedIn } = useUserSession()
 const route = useRoute()
 
-if (!loggedIn.value && route.path !== "/login") {
+if (import.meta.env.PROD && !loggedIn.value && route.path !== "/login") {
   navigateTo("/login")
 }
 </script>
@@ -10,9 +10,7 @@ if (!loggedIn.value && route.path !== "/login") {
   <div>
     <div class="flex h-screen bg-base-100">
       <div class="w-64 flex-none border-r">
-        <KeepAlive>
-          <UserCard />
-        </KeepAlive>
+        <UserCard />
         <KeepAlive>
           <ThreadList />
         </KeepAlive>

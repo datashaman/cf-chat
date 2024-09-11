@@ -2,7 +2,7 @@
 const { loggedIn } = useUserSession()
 const route = useRoute()
 
-if (!loggedIn.value && route.path !== "/login") {
+if (import.meta.env.PROD && !loggedIn.value && route.path !== "/login") {
   navigateTo("/login")
 }
 </script>
