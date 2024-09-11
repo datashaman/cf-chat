@@ -1247,6 +1247,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroicons/vue@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@heroicons/vue@npm:2.1.5"
+  peerDependencies:
+    vue: ">= 3"
+  checksum: 10c0/64037ec72c2b43f69cd4ce6ac15e6a6f7ffc9d3bdf41eb2f40bfd4cde17882e19f8a89259a05c067ad33be3d7c59581d51f8b8c0c8e2053ab5e557223211952c
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/module-importer@npm:^1.0.1":
   version: 1.0.1
   resolution: "@humanwhocodes/module-importer@npm:1.0.1"
@@ -1580,6 +1589,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nuxt/kit@npm:^3.13.1":
+  version: 3.13.1
+  resolution: "@nuxt/kit@npm:3.13.1"
+  dependencies:
+    "@nuxt/schema": "npm:3.13.1"
+    c12: "npm:^1.11.2"
+    consola: "npm:^3.2.3"
+    defu: "npm:^6.1.4"
+    destr: "npm:^2.0.3"
+    globby: "npm:^14.0.2"
+    hash-sum: "npm:^2.0.0"
+    ignore: "npm:^5.3.2"
+    jiti: "npm:^1.21.6"
+    klona: "npm:^2.0.6"
+    knitwork: "npm:^1.1.0"
+    mlly: "npm:^1.7.1"
+    pathe: "npm:^1.1.2"
+    pkg-types: "npm:^1.2.0"
+    scule: "npm:^1.3.0"
+    semver: "npm:^7.6.3"
+    ufo: "npm:^1.5.4"
+    unctx: "npm:^2.3.1"
+    unimport: "npm:^3.11.1"
+    untyped: "npm:^1.4.2"
+  checksum: 10c0/b34b06d441cada54d7ae7919f7652e95eb1713b35051e2793a72bafd52e30a1f17a76bcc7905e3596d6f7f0dface0cddab885d0c2ba37ee4077fad9033dbd54a
+  languageName: node
+  linkType: hard
+
 "@nuxt/schema@npm:3.13.0, @nuxt/schema@npm:^3.13.0":
   version: 3.13.0
   resolution: "@nuxt/schema@npm:3.13.0"
@@ -1597,6 +1634,26 @@ __metadata:
     unimport: "npm:^3.11.0"
     untyped: "npm:^1.4.2"
   checksum: 10c0/e2748930886e3f4f9d30f909769e8a98bd7aaf35f353da8006fa141b3125af37dff15ec582b7bf0eb4a6433f27712091e1b94ca547f32c157fbd0cbd6ad21c97
+  languageName: node
+  linkType: hard
+
+"@nuxt/schema@npm:3.13.1":
+  version: 3.13.1
+  resolution: "@nuxt/schema@npm:3.13.1"
+  dependencies:
+    compatx: "npm:^0.1.8"
+    consola: "npm:^3.2.3"
+    defu: "npm:^6.1.4"
+    hookable: "npm:^5.5.3"
+    pathe: "npm:^1.1.2"
+    pkg-types: "npm:^1.2.0"
+    scule: "npm:^1.3.0"
+    std-env: "npm:^3.7.0"
+    ufo: "npm:^1.5.4"
+    uncrypto: "npm:^0.1.3"
+    unimport: "npm:^3.11.1"
+    untyped: "npm:^1.4.2"
+  checksum: 10c0/606719a9f42ded88f6e0d123af3835014ef0dcdc630c97f551fe3dee5aec31d615532f4e522f18d3623aaf13c41fdb201a95b2326508214c03a552438601545d
   languageName: node
   linkType: hard
 
@@ -3239,6 +3296,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"c12@npm:^1.11.2":
+  version: 1.11.2
+  resolution: "c12@npm:1.11.2"
+  dependencies:
+    chokidar: "npm:^3.6.0"
+    confbox: "npm:^0.1.7"
+    defu: "npm:^6.1.4"
+    dotenv: "npm:^16.4.5"
+    giget: "npm:^1.2.3"
+    jiti: "npm:^1.21.6"
+    mlly: "npm:^1.7.1"
+    ohash: "npm:^1.1.3"
+    pathe: "npm:^1.1.2"
+    perfect-debounce: "npm:^1.0.0"
+    pkg-types: "npm:^1.2.0"
+    rc9: "npm:^2.1.2"
+  peerDependencies:
+    magicast: ^0.3.4
+  peerDependenciesMeta:
+    magicast:
+      optional: true
+  checksum: 10c0/6c805e563b92109d7c4b7f7526b0fcf91c71ff50a30c316c3f77ccd3a8da8135db343ca9d8720b3ce0472ff1ee451edb8decef6e136a3b3af1ec2ec72b647a60
+  languageName: node
+  linkType: hard
+
 "cac@npm:^6.7.14":
   version: 6.7.14
   resolution: "cac@npm:6.7.14"
@@ -3335,6 +3417,7 @@ __metadata:
   dependencies:
     "@cloudflare/vitest-pool-workers": "npm:^0.4.27"
     "@eslint/js": "npm:^9.9.1"
+    "@heroicons/vue": "npm:^2.1.5"
     "@pinia/nuxt": "npm:^0.5.4"
     "@types/dompurify": "npm:^3"
     "@vitest/runner": "npm:<1.6.0-0"
@@ -3353,6 +3436,7 @@ __metadata:
     mitt: "npm:^3.0.1"
     nitro-cloudflare-dev: "npm:^0.1.6"
     nuxt: "npm:^3.13.0"
+    nuxt-auth-utils: "npm:^0.3.7"
     openai: "npm:^4.57.0"
     postcss: "npm:^8.4.41"
     prettier: "npm:3.3.3"
@@ -7304,6 +7388,22 @@ __metadata:
     nuxt: bin/nuxi.mjs
     nuxt-cli: bin/nuxi.mjs
   checksum: 10c0/595338393c95b811b6aa28e13f7c24f39d03184c5954b0fa3d9d9d0177e5c89158ef28213739147e9285944fac1dba3a7f2d2c726e861f3a13326a5035567b00
+  languageName: node
+  linkType: hard
+
+"nuxt-auth-utils@npm:^0.3.7":
+  version: 0.3.7
+  resolution: "nuxt-auth-utils@npm:0.3.7"
+  dependencies:
+    "@nuxt/kit": "npm:^3.13.1"
+    defu: "npm:^6.1.4"
+    hookable: "npm:^5.5.3"
+    ofetch: "npm:^1.3.4"
+    ohash: "npm:^1.1.3"
+    pathe: "npm:^1.1.2"
+    scule: "npm:^1.3.0"
+    uncrypto: "npm:^0.1.3"
+  checksum: 10c0/7d6d7b1af3e339d88bd55d8915aaf76a3080264967bce2c6ad7f323de0fa5e6e85d7ef575517d3ca4dcd792b21503b457cdefcb2e617920e49eea2c5722c16c0
   languageName: node
   linkType: hard
 

@@ -24,7 +24,7 @@ onMounted(async () => {
   const { $bus } = useNuxtApp()
 
   worker = useWorker({
-    threadDeleted: async (payload) => {
+    deletedThread: async (payload) => {
       threads.value = threads.value.filter(
         (thread) => thread.id !== payload.thread.id,
       )
@@ -43,20 +43,16 @@ onMounted(async () => {
     return navigateTo(`/threads/${thread.id}`)
   })
 
-  worker.port.postMessage({ type: "getThreads" })
-
+  worker.port.postMessage({ type: "fetchThreads" })
   worker.port.start()
 })
 </script>
 <template>
   <ul class="menu rounded-box">
-    <li class="menu-title flex flex-row">
-      <div class="flex-grow">Threads</div>
-      <div>
-        <button class="btn btn-square btn-primary btn-xs" @click="createThread">
-          +
-        </button>
-      </div>
+    <li class="menu-item">
+      <NuxtLink href="/" :class="{ active: !route.params.id }"
+        >Create Thread</NuxtLink
+      >
     </li>
     <li v-for="thread in threads" :key="thread.id" class="menu-item">
       <NuxtLink
