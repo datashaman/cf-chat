@@ -40,18 +40,20 @@ export const useOpenAI = (env) => {
     return client.beta.assistants.update(assistantId, params)
   }
 
+  const createOrUpdateAssistant = async (params = {}) => {
+    const assistant = await findAssistant()
+    params = assistantParams(params)
+
+    return assistant
+      ? updateAssistant(assistant.id, params)
+      : createAssistant(params)
+  }
+
   return {
     listAssistants,
     findAssistant,
     createAssistant,
-    createOrUpdateAssistant: async (params = {}) => {
-      const assistant = await findAssistant()
-      params = assistantParams(params)
-
-      return assistant
-        ? updateAssistant(assistant.id, params)
-        : createAssistant(params)
-    },
+    createOrUpdateAssistant,
     deleteAssistant: (assistantId) => {
       return client.beta.assistants.del(assistantId)
     },
@@ -95,6 +97,11 @@ export const useOpenAI = (env) => {
     },
     runThread: (threadId, params) => {
       return client.beta.threads.runs.stream(threadId, params)
+    },
+    submitToolOutputs: (threadId, runId, toolOutputs) => {
+      return client.beta.threads.runs.submitToolOutputsStream(threadId, runId, {
+        tool_outputs: toolOutputs,
+      })
     },
   }
 }

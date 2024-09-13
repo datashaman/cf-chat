@@ -31,11 +31,14 @@ const runThread = async (params = {}) => {
   })
 
   // Not using mande here because we need a stream response
-  const response = await $fetch(`/api/threads/${route.params.id}/runs`, {
+  params = {
     method: "POST",
     body: JSON.stringify(params),
     responseType: "stream",
-  })
+    tools: useTools().defineTools(["getCurrentTime"]),
+  }
+
+  const response = await $fetch(`/api/threads/${route.params.id}/runs`, params)
 
   const reader = response.pipeThrough(new TextDecoderStream()).getReader()
 
@@ -170,6 +173,7 @@ onBeforeUnmount(() => {
   <form @submit.prevent="sendMessage">
     <div class="p-4 border-t flex">
       <textarea
+        autofocus
         class="textarea textarea-bordered w-full"
         placeholder="Type a message..."
         v-model="message"
